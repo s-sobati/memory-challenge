@@ -22,6 +22,10 @@ export const imagesSlice = createSlice({
       const { payload } = action
       state.revealed.push(...payload)
     },
+    updateData: (state, action: PayloadAction<number[]>) => {
+      const newData = action.payload.map((item, index) => ({ id: item, uniqueId: `${item}-${index}` }))
+      state.data.push(...newData)
+    },
   },
 
   extraReducers: builder => {
@@ -31,7 +35,6 @@ export const imagesSlice = createSlice({
       })
       .addCase(getImageIdsRequestAsync.fulfilled, (state, action) => {
         state.is_fetching = false
-        state.data = action.payload.map((item, index) => ({ id: item, uniqueId: `${item}-${index}` }))
       })
       .addCase(getImageIdsRequestAsync.rejected, state => {
         state.is_fetching = false
@@ -39,7 +42,7 @@ export const imagesSlice = createSlice({
   },
 })
 
-export const { addRevealedId } = imagesSlice.actions
+export const { addRevealedId, updateData } = imagesSlice.actions
 
 export const selectData = (state: RootState): ImagesData[] => state.images.data
 export const selectRevealed = (state: RootState): ImagesData[] => state.images.revealed
